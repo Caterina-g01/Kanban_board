@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "../../../Новая папка/udemyApp"
+		},
+		{
+			"path": "../../../Coding-drills"
+		},
+		{
+			"path": "../../../Новая папка/To-Do List"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "img"
+	}
+}

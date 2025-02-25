@@ -1,0 +1,30 @@
+.container {
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.455);
+}
+
+.content {
+  max-width: 1200px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.titleContainer {
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-size: 16px;
+  padding-left: 50px;
+}
+
+.title {
+  color: white;
+  font-size: 65px;
+  margin-bottom: 20px;
+  line-height: 65px;
+}
+
+.titleBoard {
+  padding-left: 126px;
+}

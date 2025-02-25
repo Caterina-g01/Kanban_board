@@ -1,0 +1,28 @@
+.container {
+  min-width: 300px;
+  max-width: 400px;
+  min-height: 350px;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.278);
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.title {
+  padding: 10px 0;
+  color: white;
+  font-size: 23px;
+  text-align: center;
+  border-bottom: 1px solid rgb(205, 205, 205);
+}
+
+.btn {
+  height: 50px;
+  position: absolute;
+  bottom: 0;
+  min-width: 300px;
+  max-width: 400px;
+  background-color: rgb(112, 65, 150);
+  border-radius: 0px 0px 15px 15px;
+  color: white;
+}
