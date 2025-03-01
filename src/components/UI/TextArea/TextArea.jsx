@@ -8,6 +8,7 @@ export default function TextArea(props) {
     name,
     className,
     handleUpdateTasksDescriptionOnBlur,
+    onKeyDownTextarea,
   } = props;
   return (
     <textarea
@@ -16,6 +17,7 @@ export default function TextArea(props) {
       onChange={(event) => handleChange(event.target.value)}
       placeholder={name}
       onBlur={handleUpdateTasksDescriptionOnBlur}
+      onKeyDown={onKeyDownTextarea}
     ></textarea>
   );
 }

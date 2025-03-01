@@ -46,6 +46,16 @@ function App() {
     setTextareaValue("");
   }
 
+  function deleteTask(id) {
+    setTasks((prevTasks) => {
+      const updatedTasks = {};
+      for (const key in prevTasks) {
+        updatedTasks[key] = prevTasks[key].filter((task) => task.id !== id);
+      }
+      return updatedTasks;
+    });
+  }
+
   function handleEditTitleMode(id) {
     setEditModeTaskTitle(id);
   }
@@ -77,6 +87,16 @@ function App() {
         textareaValue={textareaValue}
         handleTextareaChange={handleTextareaChange}
         handleAddTask={() => handleAddTask(inputValue, textareaValue)}
+        onKeyDownInput={(e) => {
+          if (e.key === "Enter") {
+            handleAddTask(inputValue, textareaValue);
+          }
+        }}
+        onKeyDownTextarea={(e) => {
+          if (e.key === "Enter") {
+            handleAddTask(inputValue, textareaValue);
+          }
+        }}
       />
 
       <div className="mainContainer">
@@ -104,6 +124,17 @@ function App() {
                         handleUpdateTasksDescriptionOnBlur={
                           handleUpdateTasksDescriptionOnBlur
                         }
+                        deleteTask={() => deleteTask(task.id)}
+                        handleUpdateTasksTitleOnEnter={(e, id) => {
+                          if (e.key === "Enter") {
+                            handleUpdateTasksTitleOnBlur(id);
+                          }
+                        }}
+                        handleUpdateTasksDescriptionOnEnter={(e, id) => {
+                          if (e.key === "Enter") {
+                            handleUpdateTasksDescriptionOnBlur(id);
+                          }
+                        }}
                       />
                     </div>
                   );

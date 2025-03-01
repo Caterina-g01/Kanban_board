@@ -8,6 +8,8 @@ export default function Header({
   textareaValue,
   handleTextareaChange,
   handleAddTask,
+  onKeyDownInput,
+  onKeyDownTextarea,
 }) {
   return (
     <div className={s.container}>
@@ -30,6 +32,8 @@ export default function Header({
           textareaValue={textareaValue}
           handleTextareaChange={handleTextareaChange}
           handleAddTask={handleAddTask}
+          onKeyDownInput={onKeyDownInput}
+          onKeyDownTextarea={onKeyDownTextarea}
         />
       </div>
     </div>

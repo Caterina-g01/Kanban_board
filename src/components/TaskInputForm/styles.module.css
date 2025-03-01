@@ -4,11 +4,11 @@
   margin-right: 50px;
   margin-bottom: 20px;
   background-color: rgba(255, 255, 255, 0.173);
-  width: 340px;
   height: 200px;
   border-radius: 15px;
   justify-content: center;
   align-items: center;
+  min-width: 340px;
 }
 
 .btn {

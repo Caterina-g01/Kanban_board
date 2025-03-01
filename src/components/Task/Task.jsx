@@ -13,10 +13,13 @@ export default function Task({
   id,
   handleUpdateTasksTitleOnBlur,
   handleUpdateTasksDescriptionOnBlur,
+  deleteTask,
+  handleUpdateTasksDescriptionOnEnter,
+  handleUpdateTasksTitleOnEnter,
 }) {
   const [taskValue, setTaskValue] = useState(taskInputValue);
   const [descriptionValue, setDescriptionValue] = useState(taskTextareaValue);
-  console.log(taskValue);
+
   function updateTaskTitleValue(newValue) {
     setTaskValue(newValue);
   }
@@ -26,7 +29,9 @@ export default function Task({
   }
   return (
     <div className={s.container}>
-      <button className={s.btnDelete}>✖️</button>
+      <button onClick={deleteTask} className={s.btnDelete}>
+        ✖️
+      </button>
       {renderTaskTitleEditMode()}
       {renderTaskDescriptionEditMode()}
     </div>
@@ -41,6 +46,7 @@ export default function Task({
           value={taskValue}
           name=""
           handleUpdateTasksTitleOnBlur={() => handleUpdateTasksTitleOnBlur(id)}
+          onKeyDownInput={(e) => handleUpdateTasksTitleOnEnter(e, id)}
         />
       );
     }
@@ -62,6 +68,7 @@ export default function Task({
           handleUpdateTasksDescriptionOnBlur={() =>
             handleUpdateTasksDescriptionOnBlur(id)
           }
+          onKeyDownTextarea={(e) => handleUpdateTasksDescriptionOnEnter(e, id)}
         />
       );
     }

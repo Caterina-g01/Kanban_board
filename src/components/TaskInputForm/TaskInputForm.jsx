@@ -10,6 +10,8 @@ export default function TaskInputForm({
   textareaValue,
   handleTextareaChange,
   handleAddTask,
+  onKeyDownInput,
+  onKeyDownTextarea,
 }) {
   return (
     <div className={s.container}>
@@ -18,12 +20,14 @@ export default function TaskInputForm({
         handleChange={handleValueChange}
         name="Task's name"
         className={s.input}
+        onKeyDownInput={onKeyDownInput}
       />
       <TextArea
         value={textareaValue}
         handleChange={handleTextareaChange}
         name="Task's description"
         className={s.textarea}
+        onKeyDownTextarea={onKeyDownTextarea}
       />
       <Button
         children="Add Task"

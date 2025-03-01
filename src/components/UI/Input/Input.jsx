@@ -7,7 +7,8 @@ export default function Input(props) {
     value,
     name,
     className,
-    handleUpdateTasksTitleOnBlur /* onKeyDown */,
+    handleUpdateTasksTitleOnBlur,
+    onKeyDownInput,
   } = props;
   return (
     <input
@@ -16,7 +17,7 @@ export default function Input(props) {
       value={value}
       placeholder={name}
       onBlur={handleUpdateTasksTitleOnBlur}
-      // onKeyDown={onKeyDown}
+      onKeyDown={onKeyDownInput}
     />
   );
 }
