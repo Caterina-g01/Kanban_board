@@ -1,51 +1,77 @@
-import React from "react";
+import React, { useState } from "react";
 import s from "./styles.module.css";
 import Input from "../UI/Input/Input";
 import TextArea from "../UI/TextArea/TextArea";
 
 export default function Task({
-  handleInputUpdate,
-  handleTextareaUpdate,
-  isInputEditing,
-  isTextareaEditing,
-  handleInputChange,
-  mainInputValue,
-  handleTextareaChange,
-  mainTextareaValue,
+  handleEditTitleMode,
+  handleEditDescriptionMode,
+  isTitleEditing,
+  isDescriptionEditing,
+  taskInputValue,
+  taskTextareaValue,
+  id,
+  handleUpdateTasksTitleOnBlur,
+  handleUpdateTasksDescriptionOnBlur,
 }) {
+  const [taskValue, setTaskValue] = useState(taskInputValue);
+  const [descriptionValue, setDescriptionValue] = useState(taskTextareaValue);
+  console.log(taskValue);
+  function updateTaskTitleValue(newValue) {
+    setTaskValue(newValue);
+  }
+
+  function updateTaskDescriptionValue(newValue) {
+    setDescriptionValue(newValue);
+  }
   return (
     <div className={s.container}>
-      {isInputEditing ? (
-        <>
-          <Input
-            handleChange={handleInputChange}
-            value={mainInputValue}
-            name=""
-          />
-        </>
-      ) : (
-        <>
-          <div onClick={handleInputUpdate} className={s.taskTitle}>
-            {mainInputValue}
-          </div>
-        </>
-      )}
-
-      {isTextareaEditing ? (
-        <>
-          <TextArea
-            handleChange={handleTextareaChange}
-            value={mainTextareaValue}
-            name=""
-          />
-        </>
-      ) : (
-        <>
-          <div onClick={handleTextareaUpdate} className={s.taskDescription}>
-            {mainTextareaValue}
-          </div>
-        </>
-      )}
+      <button className={s.btnDelete}>✖️</button>
+      {renderTaskTitleEditMode()}
+      {renderTaskDescriptionEditMode()}
     </div>
   );
+
+  function renderTaskTitleEditMode() {
+    if (isTitleEditing) {
+      return (
+        <Input
+          className={s.input}
+          handleChange={updateTaskTitleValue}
+          value={taskValue}
+          name=""
+          handleUpdateTasksTitleOnBlur={() => handleUpdateTasksTitleOnBlur(id)}
+        />
+      );
+    }
+    return (
+      <div onClick={() => handleEditTitleMode(id)} className={s.taskTitle}>
+        {taskValue}
+      </div>
+    );
+  }
+
+  function renderTaskDescriptionEditMode() {
+    if (isDescriptionEditing) {
+      return (
+        <TextArea
+          className={s.textarea}
+          handleChange={updateTaskDescriptionValue}
+          value={descriptionValue}
+          name=""
+          handleUpdateTasksDescriptionOnBlur={() =>
+            handleUpdateTasksDescriptionOnBlur(id)
+          }
+        />
+      );
+    }
+    return (
+      <div
+        onClick={() => handleEditDescriptionMode(id)}
+        className={s.taskDescription}
+      >
+        {descriptionValue}
+      </div>
+    );
+  }
 }

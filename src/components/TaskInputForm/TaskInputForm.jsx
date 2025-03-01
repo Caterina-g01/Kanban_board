@@ -17,11 +17,13 @@ export default function TaskInputForm({
         value={inputValue}
         handleChange={handleValueChange}
         name="Task's name"
+        className={s.input}
       />
       <TextArea
         value={textareaValue}
         handleChange={handleTextareaChange}
         name="Task's description"
+        className={s.textarea}
       />
       <Button
         children="Add Task"

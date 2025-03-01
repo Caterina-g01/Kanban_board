@@ -1,9 +1,3 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 html,
 body {
   height: 100%;
@@ -12,43 +6,6 @@ body {
   line-height: 1.5;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(90deg, #b42f2f, #7c56c9, #155ca4);
-}
-
-img,
-picture,
-video,
-canvas,
-svg {
-  max-width: 100%;
-}
-
-button,
-input,
-select,
-textarea {
-  font: inherit;
-  border: none;
-  background: none;
-  outline: none;
-}
-
-button {
-  cursor: pointer;
-}
-
-ul,
-ol {
-  list-style: none;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
 }
 
 .container {

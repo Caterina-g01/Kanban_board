@@ -23,3 +23,13 @@
 .btn:hover {
   background-color: #5e40b8;
 }
+
+.input {
+  height: 40px;
+  width: 300px;
+}
+
+.textarea {
+  height: 70px;
+  width: 300px;
+}

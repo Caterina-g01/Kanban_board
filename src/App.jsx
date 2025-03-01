@@ -1,7 +1,9 @@
 import { useState } from "react";
+
 import "./App.css";
 import Header from "./components/Header/Header";
-import Main from "./components/Main/Main";
+import Task from "./components/Task/Task";
+import Button from "./components/UI/Button/Button";
 import { getKanbanBoardCategory } from "./helpers/getKanbanBoardCategory";
 
 function App() {
@@ -10,14 +12,14 @@ function App() {
     acc[column.key] = [];
     return acc;
   }, {});
-  const [task, setTask] = useState({});
+
   const [tasks, setTasks] = useState(initialState);
-  const [editModeInput, setEditModeInput] = useState(false);
-  const [editModeTextArea, setEditModeTextArea] = useState(false);
+  const [editModeTaskTitle, setEditModeTaskTitle] = useState(null);
+  const [editModeTaskDescription, setEditModeTaskDescription] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [textareaValue, setTextareaValue] = useState("");
 
-  function handleValueChange(newValue) {
+  function handleInputChange(newValue) {
     setInputValue(newValue);
   }
 
@@ -25,47 +27,94 @@ function App() {
     setTextareaValue(newValue);
   }
 
-  function handleAddTask(valueOfInput, valueOfTextarea) {
+  function handleAddTask() {
+    if (inputValue.trim() === "" || textareaValue.trim() === "") {
+      return;
+    }
     const newTask = {
-      inputValue: valueOfInput,
-      textareaValue: valueOfTextarea,
+      id: Date.now(),
+      title: inputValue,
+      description: textareaValue,
     };
+
     setTasks((prevTasks) => ({
       ...prevTasks,
       backlog: [...prevTasks.backlog, newTask],
     }));
+
+    setInputValue("");
+    setTextareaValue("");
   }
 
-  function handleInputUpdate() {
-    setEditModeInput(!editModeInput);
+  function handleEditTitleMode(id) {
+    setEditModeTaskTitle(id);
   }
 
-  function handleTextareaUpdate() {
-    setEditModeTextArea(!editModeTextArea);
+  function handleEditDescriptionMode(id) {
+    setEditModeTaskDescription(id);
   }
+
+  function handleUpdateTasksTitleOnBlur() {
+    setEditModeTaskTitle(null);
+  }
+
+  function handleUpdateTasksDescriptionOnBlur() {
+    setEditModeTaskDescription(null);
+  }
+
+  const renderAddTaskButton = (categoryKey) => {
+    if (categoryKey !== "backlog") {
+      return <Button className="btn" children="Add Task" />;
+    }
+    return null;
+  };
 
   return (
     <div className="container">
       <Header
         inputValue={inputValue}
-        handleValueChange={handleValueChange}
+        handleValueChange={handleInputChange}
         textareaValue={textareaValue}
         handleTextareaChange={handleTextareaChange}
         handleAddTask={() => handleAddTask(inputValue, textareaValue)}
       />
 
-      <Main
-        kanbanBoardCategories={kanbanBoardCategories}
-        tasks={tasks}
-        handleInputChange={handleValueChange}
-        mainInputValue={task.inputValue}
-        handleTextareaChange={handleTextareaChange}
-        mainTextareaValue={task.textareaValue}
-        handleInputUpdate={handleInputUpdate}
-        handleTextareaUpdate={handleTextareaUpdate}
-        editModeInput={editModeInput}
-        editModeTextArea={editModeTextArea}
-      />
+      <div className="mainContainer">
+        {kanbanBoardCategories.map((category) => {
+          return (
+            <div key={category.key} className="taskContainer">
+              <h1 className="title">{category.title}</h1>
+              <div className="content">
+                {tasks[category.key]?.map((task) => {
+                  return (
+                    <div key={task.id}>
+                      <Task
+                        id={task.id}
+                        taskInputValue={task?.title}
+                        taskTextareaValue={task?.description}
+                        handleEditTitleMode={handleEditTitleMode}
+                        handleEditDescriptionMode={handleEditDescriptionMode}
+                        isTitleEditing={editModeTaskTitle === task.id}
+                        isDescriptionEditing={
+                          editModeTaskDescription === task.id
+                        }
+                        handleUpdateTasksTitleOnBlur={
+                          handleUpdateTasksTitleOnBlur
+                        }
+                        handleUpdateTasksDescriptionOnBlur={
+                          handleUpdateTasksDescriptionOnBlur
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              {renderAddTaskButton(category.key)}
+              {/* <Button className="btn" children="Add Task" /> */}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
