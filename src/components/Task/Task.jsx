@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDraggable } from "@dnd-kit/core";
 import s from "./styles.module.css";
 import Input from "../UI/Input/Input";
 import TextArea from "../UI/TextArea/TextArea";
@@ -17,6 +18,14 @@ export default function Task({
   handleUpdateTasksDescriptionOnEnter,
   handleUpdateTasksTitleOnEnter,
 }) {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: id,
+  });
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
   const [taskValue, setTaskValue] = useState(taskInputValue);
   const [descriptionValue, setDescriptionValue] = useState(taskTextareaValue);
 
@@ -28,7 +37,13 @@ export default function Task({
     setDescriptionValue(newValue);
   }
   return (
-    <div className={s.container}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className={s.container}
+    >
       <button onClick={deleteTask} className={s.btnDelete}>
         ✖️
       </button>

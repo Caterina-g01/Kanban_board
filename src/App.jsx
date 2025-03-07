@@ -1,11 +1,27 @@
 import { useState } from "react";
 
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+
 import "./App.css";
 import Header from "./components/Header/Header";
 import Task from "./components/Task/Task";
 import Button from "./components/UI/Button/Button";
 import DropDown from "./components/UI/DropDown/DropDown";
 import { getKanbanBoardCategory } from "./helpers/getKanbanBoardCategory";
+import { TaskContainer } from "./components/TasksContainer/TasksContainer";
 
 function App() {
   const kanbanBoardCategories = getKanbanBoardCategory();
@@ -24,6 +40,30 @@ function App() {
     review: false,
     finished: false,
   });
+  const [isDropped, setIsDropped] = useState(false);
+
+  // const sensors = useSensors(
+  //   useSensor(PointerSensor),
+  //   useSensor(KeyboardSensor, {
+  //     coordinateGetter: sortableKeyboardCoordinates,
+  //   })
+  // );
+
+  // function handleDragEnd(event) {
+  //   const { active, over } = event;
+
+  //   if (active.id !== over.id) {
+  //     setTasks((tasks) => {
+  //       if (!tasks.backlog.length) {
+  //         return;
+  //       }
+  //       const oldIndex = tasks.backlog.indexOf(active.id);
+  //       const newIndex = tasks.backlog.indexOf(over.id);
+  //       debugger;
+  //       return arrayMove(tasks.backlog, oldIndex, newIndex);
+  //     });
+  //   }
+  // }
 
   function handleInputChange(newValue) {
     setInputValue(newValue);
@@ -104,7 +144,7 @@ function App() {
     if (
       (categoryKey === "inProgress" && tasks.backlog.length > 0) ||
       (categoryKey === "review" && tasks.inProgress.length > 0) ||
-      (categoryKey === "done" && tasks.review.length > 0)
+      (categoryKey === "finished" && tasks.review.length > 0)
     )
       return (
         <Button
@@ -119,13 +159,13 @@ function App() {
     setIsDropDownVisible({ ...isDropDownVisible, [categoryKey]: true });
   }
 
-  function renderSelectorForColumn(categoryKey) {
+  function renderSelectorForColumn(categoryKey, prevCategoryKey) {
     if (isDropDownVisible[categoryKey]) {
       return (
         <DropDown
           selectedTask={null}
-          tasks={tasks.backlog}
-          onChange={(selectedTask) =>
+          tasks={tasks[prevCategoryKey]}
+          onTaskSelect={(selectedTask) =>
             handleMoveTaskToColumn(selectedTask, categoryKey)
           }
         />
@@ -153,55 +193,38 @@ function App() {
           }
         }}
       />
-
+      {/* <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      > */}
       <div className="mainContainer">
-        {kanbanBoardCategories.map((category) => {
+        {kanbanBoardCategories.map((category, index) => {
           return (
-            <div key={category.key} className="taskContainer">
-              <h1 className="title">{category.title}</h1>
-              <div className="content">
-                {renderSelectorForColumn(category.key)}
-                {tasks[category.key]?.map((task) => {
-                  return (
-                    <div key={task.id}>
-                      <Task
-                        id={task.id}
-                        taskInputValue={task?.title}
-                        taskTextareaValue={task?.description}
-                        handleEditTitleMode={handleEditTitleMode}
-                        handleEditDescriptionMode={handleEditDescriptionMode}
-                        isTitleEditing={editModeTaskTitle === task.id}
-                        isDescriptionEditing={
-                          editModeTaskDescription === task.id
-                        }
-                        handleUpdateTasksTitleOnBlur={
-                          handleUpdateTasksTitleOnBlur
-                        }
-                        handleUpdateTasksDescriptionOnBlur={
-                          handleUpdateTasksDescriptionOnBlur
-                        }
-                        deleteTask={() => deleteTask(task.id)}
-                        handleUpdateTasksTitleOnEnter={(e, id) => {
-                          if (e.key === "Enter") {
-                            handleUpdateTasksTitleOnBlur(id);
-                          }
-                        }}
-                        handleUpdateTasksDescriptionOnEnter={(e, id) => {
-                          if (e.key === "Enter") {
-                            handleUpdateTasksDescriptionOnBlur(id);
-                          }
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-              {renderAddTaskButton(category.key)}
-              {/* <Button className="btn" children="Add Task" /> */}
-            </div>
+            <TaskContainer
+              key={category.key}
+              kanbanBoardCategories={kanbanBoardCategories}
+              tasks={tasks}
+              category={category}
+              index={index}
+              handleEditTitleMode={handleEditTitleMode}
+              handleEditDescriptionMode={handleEditDescriptionMode}
+              editModeTaskTitle={editModeTaskTitle}
+              editModeTaskDescription={editModeTaskDescription}
+              handleUpdateTasksTitleOnBlur={handleUpdateTasksTitleOnBlur}
+              handleUpdateTasksDescriptionOnBlur={
+                handleUpdateTasksDescriptionOnBlur
+              }
+              deleteTask={deleteTask}
+              renderSelectorForColumn={renderSelectorForColumn}
+              renderAddTaskButton={renderAddTaskButton}
+              id={category.key}
+              setTasks={setTasks}
+            />
           );
         })}
       </div>
+      {/* </DndContext> */}
     </div>
   );
 }
