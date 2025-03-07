@@ -18,6 +18,6 @@ export default function TextArea(props) {
       placeholder={name}
       onBlur={handleUpdateTasksDescriptionOnBlur}
       onKeyDown={onKeyDownTextarea}
-    ></textarea>
+    />
   );
 }

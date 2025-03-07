@@ -4,6 +4,7 @@ import "./App.css";
 import Header from "./components/Header/Header";
 import Task from "./components/Task/Task";
 import Button from "./components/UI/Button/Button";
+import DropDown from "./components/UI/DropDown/DropDown";
 import { getKanbanBoardCategory } from "./helpers/getKanbanBoardCategory";
 
 function App() {
@@ -18,6 +19,11 @@ function App() {
   const [editModeTaskDescription, setEditModeTaskDescription] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [textareaValue, setTextareaValue] = useState("");
+  const [isDropDownVisible, setIsDropDownVisible] = useState({
+    inProgress: false,
+    review: false,
+    finished: false,
+  });
 
   function handleInputChange(newValue) {
     setInputValue(newValue);
@@ -46,6 +52,27 @@ function App() {
     setTextareaValue("");
   }
 
+  function handleMoveTaskToColumn(task, newColumnKey) {
+    setTasks((prevTasks) => {
+      const updatedTasks = { ...prevTasks };
+
+      for (const columnKey in updatedTasks) {
+        updatedTasks[columnKey] = updatedTasks[columnKey].filter(
+          (t) => t.id !== task.id
+        );
+      }
+
+      updatedTasks[newColumnKey] = [...updatedTasks[newColumnKey], task];
+
+      return updatedTasks;
+    });
+
+    setIsDropDownVisible((prevState) => ({
+      ...prevState,
+      [newColumnKey]: false,
+    }));
+  }
+
   function deleteTask(id) {
     setTasks((prevTasks) => {
       const updatedTasks = {};
@@ -72,12 +99,40 @@ function App() {
     setEditModeTaskDescription(null);
   }
 
-  const renderAddTaskButton = (categoryKey) => {
-    if (categoryKey !== "backlog") {
-      return <Button className="btn" children="Add Task" />;
+  function renderAddTaskButton(categoryKey) {
+    if (categoryKey === "backlog") return null;
+    if (
+      (categoryKey === "inProgress" && tasks.backlog.length > 0) ||
+      (categoryKey === "review" && tasks.inProgress.length > 0) ||
+      (categoryKey === "done" && tasks.review.length > 0)
+    )
+      return (
+        <Button
+          onClick={() => handleAddSelectorForColumn(categoryKey)}
+          className="btn"
+          children="Add Task"
+        />
+      );
+  }
+
+  function handleAddSelectorForColumn(categoryKey) {
+    setIsDropDownVisible({ ...isDropDownVisible, [categoryKey]: true });
+  }
+
+  function renderSelectorForColumn(categoryKey) {
+    if (isDropDownVisible[categoryKey]) {
+      return (
+        <DropDown
+          selectedTask={null}
+          tasks={tasks.backlog}
+          onChange={(selectedTask) =>
+            handleMoveTaskToColumn(selectedTask, categoryKey)
+          }
+        />
+      );
     }
     return null;
-  };
+  }
 
   return (
     <div className="container">
@@ -105,6 +160,7 @@ function App() {
             <div key={category.key} className="taskContainer">
               <h1 className="title">{category.title}</h1>
               <div className="content">
+                {renderSelectorForColumn(category.key)}
                 {tasks[category.key]?.map((task) => {
                   return (
                     <div key={task.id}>

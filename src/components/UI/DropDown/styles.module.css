@@ -1,0 +1,8 @@
+.selector {
+  width: 90%;
+  height: 30px;
+  border: 1 solid rgba(176, 63, 63, 0.102);
+  border-radius: 15px;
+  background-color: rgb(255, 255, 255);
+  padding-left: 15px;
+}
