@@ -9,6 +9,7 @@ export default function TextArea(props) {
     className,
     handleUpdateTasksDescriptionOnBlur,
     onKeyDownTextarea,
+    onPointerDownTextArea,
   } = props;
   return (
     <textarea
@@ -18,6 +19,7 @@ export default function TextArea(props) {
       placeholder={name}
       onBlur={handleUpdateTasksDescriptionOnBlur}
       onKeyDown={onKeyDownTextarea}
+      onPointerDown={onPointerDownTextArea}
     />
   );
 }

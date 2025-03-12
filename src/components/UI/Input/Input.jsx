@@ -18,6 +18,7 @@ export default function Input(props) {
       placeholder={name}
       onBlur={handleUpdateTasksTitleOnBlur}
       onKeyDown={onKeyDownInput}
+      onPointerDown={(e) => e.stopPropagation()}
     />
   );
 }

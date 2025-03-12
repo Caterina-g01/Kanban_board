@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDraggable } from "@dnd-kit/core";
+import { useSortable } from "@dnd-kit/sortable";
 import s from "./styles.module.css";
 import Input from "../UI/Input/Input";
 import TextArea from "../UI/TextArea/TextArea";
@@ -17,9 +17,11 @@ export default function Task({
   deleteTask,
   handleUpdateTasksDescriptionOnEnter,
   handleUpdateTasksTitleOnEnter,
+  categoryKey,
 }) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform } = useSortable({
     id: id,
+    data: { categoryKey },
   });
   const style = transform
     ? {
@@ -44,9 +46,17 @@ export default function Task({
       {...attributes}
       className={s.container}
     >
-      <button onClick={deleteTask} className={s.btnDelete}>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          deleteTask();
+        }}
+        onPointerDown={(e) => e.stopPropagation()}
+        className={s.btnDelete}
+      >
         ✖️
       </button>
+
       {renderTaskTitleEditMode()}
       {renderTaskDescriptionEditMode()}
     </div>
@@ -84,6 +94,7 @@ export default function Task({
             handleUpdateTasksDescriptionOnBlur(id)
           }
           onKeyDownTextarea={(e) => handleUpdateTasksDescriptionOnEnter(e, id)}
+          onPointerDownTextArea={(e) => e.stopPropagation()}
         />
       );
     }

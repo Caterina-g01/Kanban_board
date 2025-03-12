@@ -42,29 +42,6 @@ function App() {
   });
   const [isDropped, setIsDropped] = useState(false);
 
-  // const sensors = useSensors(
-  //   useSensor(PointerSensor),
-  //   useSensor(KeyboardSensor, {
-  //     coordinateGetter: sortableKeyboardCoordinates,
-  //   })
-  // );
-
-  // function handleDragEnd(event) {
-  //   const { active, over } = event;
-
-  //   if (active.id !== over.id) {
-  //     setTasks((tasks) => {
-  //       if (!tasks.backlog.length) {
-  //         return;
-  //       }
-  //       const oldIndex = tasks.backlog.indexOf(active.id);
-  //       const newIndex = tasks.backlog.indexOf(over.id);
-  //       debugger;
-  //       return arrayMove(tasks.backlog, oldIndex, newIndex);
-  //     });
-  //   }
-  // }
-
   function handleInputChange(newValue) {
     setInputValue(newValue);
   }
@@ -193,11 +170,7 @@ function App() {
           }
         }}
       />
-      {/* <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      > */}
+
       <div className="mainContainer">
         {kanbanBoardCategories.map((category, index) => {
           return (
@@ -224,7 +197,6 @@ function App() {
           );
         })}
       </div>
-      {/* </DndContext> */}
     </div>
   );
 }

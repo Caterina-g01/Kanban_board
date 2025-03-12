@@ -44,26 +44,38 @@ export function TaskContainer({
 
   function handleDragEnd(event) {
     const { active, over } = event;
-    // if (!over?.id) {
-    //   return null;
-    // }
+    const activeCategory = active.data.current.categoryKey;
+    const overCategory = over?.data.current.categoryKey;
     if (active.id !== over?.id) {
+      console.log(active, over);
       setTasks((tasks) => {
-        if (!tasks.backlog.length) {
-          return;
+        if (activeCategory === overCategory) {
+          const categoryKey = activeCategory;
+
+          const oldIndex = tasks[categoryKey].findIndex(
+            (task) => task.id === active.id
+          );
+          const newIndex = tasks[categoryKey].findIndex(
+            (task) => task.id === over.id
+          );
+
+          if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+            const updatedCategory = arrayMove(
+              tasks[categoryKey],
+              oldIndex,
+              newIndex
+            );
+            return {
+              ...tasks,
+              [categoryKey]: updatedCategory,
+            };
+          }
         }
-        const oldIndex = tasks.backlog.indexOf(active.id);
-        const newIndex = tasks.backlog.indexOf(over.id);
-        debugger;
-        return arrayMove(tasks.backlog, oldIndex, newIndex);
+
+        return tasks;
       });
     }
   }
-  //
-
-  // const style = {
-  //   color: isOver ? "green" : undefined,
-  // };
 
   return (
     <div
@@ -84,13 +96,14 @@ export function TaskContainer({
           onDragEnd={handleDragEnd}
         >
           <SortableContext
-            items={tasks.backlog}
+            items={tasks[category.key]}
             strategy={verticalListSortingStrategy}
           >
             {tasks[category.key]?.map((task) => {
               return (
                 <div key={task.id}>
                   <Task
+                    categoryKey={category.key}
                     id={task.id}
                     taskInputValue={task?.title}
                     taskTextareaValue={task?.description}
